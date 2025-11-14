@@ -1,0 +1,227 @@
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        background: #0a0a0a;
+        font-family: 'Poppins', sans-serif;
+        overflow: hidden;
+    }
+
+    /* Caixa estilo celular */
+    .phone-box {
+        width: 380px;
+        max-width: 92%;
+        height: 680px;
+        background: linear-gradient(180deg, #1a1a1a, #000);
+        border: 3px solid #d4af37;
+        border-radius: 25px;
+        margin: 40px auto;
+        position: relative;
+        z-index: 20;
+        padding: 20px;
+        color: white;
+        text-align: center;
+        box-shadow: 0 0 30px rgba(212,175,55,0.4);
+    }
+
+    h1 {
+        font-size: 24px;
+        color: #FFD700;
+        margin-bottom: 10px;
+    }
+
+    .gold {
+        color: #FFD700;
+        font-weight: bold;
+    }
+
+    .cta {
+        background: linear-gradient(90deg, #d4af37, #ffdd55);
+        border: none;
+        padding: 16px;
+        width: 88%;
+        border-radius: 14px;
+        font-size: 20px;
+        font-weight: bold;
+        margin-top: 18px;
+        cursor: pointer;
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.04); }
+        100% { transform: scale(1); }
+    }
+
+    /* Fagulhas douradas infinitas */
+    .particles {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 5;
+    }
+
+    .particle {
+        position: absolute;
+        width: 6px;
+        height: 6px;
+        background: radial-gradient(circle, #ffdf85, #d4af37);
+        border-radius: 50%;
+        animation: float 6s infinite ease-in-out;
+        opacity: 0.8;
+    }
+
+    @keyframes float {
+        0% { transform: translateY(0); opacity: 0.3; }
+        50% { transform: translateY(-80px); opacity: 0.8; }
+        100% { transform: translateY(0); opacity: 0.3; }
+    }
+
+    /* Tela inicial com confete */
+    #confetti-canvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 999;
+        pointer-events: none;
+    }
+
+</style>
+</head>
+
+<body>
+
+<!-- CONFETES APENAS 1 VEZ -->
+<canvas id="confetti-canvas"></canvas>
+
+<!-- PARTÍCULAS PERMANENTES -->
+<div class="particles">
+</div>
+
+<!-- PLAYER YOUTUBE INVISÍVEL -->
+<iframe width="0" height="0" src="https://www.youtube.com/embed/SkvBx-wz5F0?autoplay=1&loop=1" frameborder="0"></iframe>
+
+
+<!-- CONTEÚDO PRINCIPAL -->
+<div class="phone-box">
+    <h1>🎉 Parabéns! Você foi <span class="gold">selecionada</span></h1>
+
+    <p style="font-size:17px; line-height:1.4;">
+        Apenas <span class="gold">5 pessoas por dia</span> conseguem acesso ao <br>
+        <span class="gold">Bônus Especial Secreto</span>.  
+        <br><br>
+        Hoje você é a <span class="gold">3ª selecionada</span> 🎯  
+        <br><br>
+        <span style="font-size:19px; font-weight:bold;">
+            O conteúdo só desbloqueia se você abrir agora.
+        </span>
+    </p>
+
+    <h2 style="margin-top:22px; color:#ffdd77;">⏳ Atenção</h2>
+    <p style="font-size:15px;">
+        Se você sair da página, o acesso é <span class="gold">perdido</span>.
+        <br>
+        E a vaga passa para a próxima pessoa da lista.
+    </p>
+
+    <h3 style="color:#f7d774; margin-top:10px;">
+        🔐 Bônus Disponível por:
+    </h3>
+
+    <div style="font-size:30px; font-weight:bold; color:#FFD700;" id="timer">
+        04:59
+    </div>
+
+    <button class="cta" onclick="window.location.href='https://seu-link-aqui.com'">
+        📲 QUERO DESBLOQUEAR MEU BÔNUS
+    </button>
+
+</div>
+
+
+<script>
+/* TIMER REGRESSIVO */
+let time = 299; 
+setInterval(() => {
+    let m = Math.floor(time / 60);
+    let s = time % 60;
+    document.getElementById("timer").innerHTML = 
+        `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    time--;
+    if(time <= 0) {
+        window.location.href = "https://google.com"; 
+    }
+}, 1000);
+
+
+/* PARTICULAS DOURADAS */
+const container = document.querySelector('.particles');
+for(let i=0;i<35;i++){
+    const p = document.createElement('div');
+    p.classList.add('particle');
+    p.style.left = Math.random()*100+'%';
+    p.style.top = Math.random()*100+'%';
+    p.style.animationDuration = (4 + Math.random()*4) + 's';
+    p.style.animationDelay = (Math.random()*3) + 's';
+    container.appendChild(p);
+}
+
+
+/* CONFETES ÚNICA VEZ */
+const canvas = document.getElementById('confetti-canvas');
+const ctx = canvas.getContext('2d');
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let confetti = [];
+
+for (let i = 0; i < 120; i++) {
+    confetti.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * -canvas.height,
+        r: Math.random() * 7 + 4,
+        d: Math.random() * 3 + 2,
+        color: `hsl(${Math.random()*360}, 80%, 60%)`
+    });
+}
+
+function drawConfetti() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    confetti.forEach((c) => {
+        ctx.beginPath();
+        ctx.arc(c.x, c.y, c.r, 0, Math.PI*2, false);
+        ctx.fillStyle = c.color;
+        ctx.fill();
+    });
+}
+
+function animateConfetti() {
+    drawConfetti();
+    confetti.forEach((c) => {
+        c.y += c.d;
+        if (c.y > canvas.height) c.y = -10;
+    });
+}
+
+let confettiInterval = setInterval(animateConfetti, 16);
+
+/* remove depois de 2.5s */
+setTimeout(() => {
+    clearInterval(confettiInterval);
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+}, 2500);
+</script>
+
+</body>
+</html>
